@@ -1,4 +1,4 @@
-%% Modello
+%% Modello del sistema non lineare
 %x1 concentrazione del glucosio
 %x2 concentrazione di insulina nei liquidi interstiziali 
 
