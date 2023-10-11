@@ -1,0 +1,24 @@
+%% Modello
+%x1 concentrazione del glucosio
+%x2 concentrazione di insulina nei liquidi interstiziali 
+
+p1 = 0.0151; %tasso base di rimozione del glucosio dal sangue
+p2 = 0.0313; %tasso rimozione del glucosio dovuto all'insulina
+p3 = 0.0097; %0.0097
+ge = 0.97;
+ie = 0.003;
+
+
+
+A = [0 1; 0 0];
+B = [Gamma 1].';
+C = [1 0];
+
+%Matrice di raggiungibilità
+WR = [B A*B];
+det(WR) %il sistema è raggiungibile. Posso sintetizzare il controllore
+
+K = place(A, B, [-1 -2]);
+% Calcolo Kr
+
+Kr=-1/(C*(A-B*K)^-1*B);
