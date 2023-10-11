@@ -6,7 +6,7 @@
 function xdot = SYS(x)
     p1 = 0.0151; %tasso base di rimozione del glucosio dal sangue
     p2 = 0.0313; %tasso rimozione del glucosio dovuto all'insulina
-    p3 = 0.0097; %0.0097
+    p3 = 0.0097;
     ge = 0.97;
     ie = 0.003;
     u=x(3);
