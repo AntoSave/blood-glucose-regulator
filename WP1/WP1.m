@@ -29,13 +29,29 @@ text(x1eq1,x2eq1,'u=1.003')
 % Piano delle fasi per u=1.003
 matlab.apputil.run('PhasePlane')
 
+%Simulazione del sistema a ciclo aperto per u=1.003
+tspan = [0 250];
+x0=[0 0];
+u=1.003;
+[t,x] = ode45(@(t,x) SYS([x.' u]), tspan, x0);
+x1=x(:,1);
+x2=x(:,2);
+
+plot(t,x1,'r',t,x2,'b');
+xlabel('t')
+figure
+plot(x1,x2,'r', 0, 0, 'd')
+xlabel('x1')
+ylabel('x2')
+xlim([-2 2.5])
+ylim([-0.5, 0.5])
 
 %% Linearizzazione attorno al punto di equilibrio per u=1.003
 %Punto di equilibrio per u=1.003
 [x1_eq,x2_eq] = get_equilibrium(u_eq);
 x1_eq,x2_eq
 %Linearizzazione attorno al punto di equilibrio
-A = [-p1-x2_eq x1_eq; 0 -p2];
+A = [-p1-x2_eq -x1_eq; 0 -p2];
 B = [0; p3];
 C = [1 0];
 
@@ -54,21 +70,24 @@ kr = -1636751;
 [V,D] = eig(A-B*K);
 lambda1 = D(1,1)
 lambda2 = D(2,2)
-
-% Quindi gli autovalori sono stati posizionati male perché non garantiscono
-% asintotica stabilità a ciclo chiuso del sistema linearizzato.
-% Domanda: perché il progettista ha scelto questi autovalori???
+% Quindi il sistema a ciclo chiuso è asintoticamente stabile ma la presenza
+% di una parte immaginaria comporta la presenza di
+% sovraelongazioni/oscillazioni.
+syms s
+c_poly = sym2poly((s-lambda1)*(s-lambda2)); %The characteristic polynomial of A-BK
+omega_c = sqrt(c_poly(3))
+zita = c_poly(2)/(omega_c*2)
 % Simulazione del sistema linearizzato a ciclo chiuso:
-%t=[0:0.1:1000];
-%y = step(ss(A-B*K,B.*kr,C,0),t)
-%plot(t,y)
+t=[0:0.1:1000];
+y = step(ss(A-B*K,B.*kr,C,0),t);
+plot(t,y)
 
 %% Analisi del controllore v0 sul sistema non lineare
 % Piano delle fasi a cilo chiuso per r=0.0451
 matlab.apputil.run('PhasePlane')
 
 % Adesso simuliamo il controllore v0
-%sim('WP1_sym.slx')
+sim('WP1_sym.slx')
 
 %% DA CANCELLARE
 % Quindi il sistema a ciclo chiuso è asintoticamente stabile ma la presenza

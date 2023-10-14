@@ -4,12 +4,15 @@ p3 = 0.0097; %0.0097
 ge = 0.97;
 ie = 0.003;
 u = 1.003;
+K = [-1651800 2200];
+kr = -1636751;
 %u = (p3*ie-p1*p2)/p3
+r=0.0451;
 
 %% simbolic solutions
 syms x1 x2
 eqn1 = -(p1+x2)*x1+p1*ge == 0;
-eqn2 = -(p2*x2)+p3*(u-ie) == 0;
+eqn2 = -(p2*x2)+p3*(-K*[x1, x2]+kr*r-ie) == 0;
 sol = solve([eqn1, eqn2], [x1, x2]);
 double(sol.x1)
 double(sol.x2)
