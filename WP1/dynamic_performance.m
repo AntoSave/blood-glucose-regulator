@@ -21,4 +21,4 @@ S1 = stepinfo(y,t,yfinal)
 % S2 = stepinfo(sys,'RiseTimeThreshold',[0.05 0.95]); %set RiseTimeThreshold to a vector containing those bounds
 
 
-
+(6.421e-2 - 4.511e-2)/(4.511e-2)
