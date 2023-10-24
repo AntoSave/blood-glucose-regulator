@@ -25,9 +25,6 @@ B = [0; p3];
 C = [1 0];
 D = [0];
 
-f = [-x2_eq*x1_eq-p1*x1_eq-x2_eq*x1_eq, -p2*x2_eq+p3*u_eq].';
-g = [p3*u_eq];
-
 equilibrium = [x1_eq,x2_eq].';
 
 % A_tilde = [A f;0 0 0];
@@ -39,8 +36,8 @@ equilibrium = [x1_eq,x2_eq].';
 
 WR = [B A*B]
 rank(WR) %il sistema è raggiungibile.
-Qu = 1;
-Qx = [0.1 0;0 0.1];
+Qu = 0.0001;
+Qx = [10 0;0 1];
 
 sys = ss(A,B,C,D)
 K = lqr(sys, Qx, Qu)
