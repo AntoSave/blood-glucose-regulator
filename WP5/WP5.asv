@@ -34,7 +34,7 @@ x1_eq=sol.x1
 x2_eq=sol.x2
 z_eq=sol.z
 
-%% Sistema con solo P e verificare se è controllabile vedendo la matrice dinamica A se ha abbastanza gradi di libertà
+%% 
 
 %% Linearizzazione intorno ai trim point
 J_a=jacobian([dx1, dx2, dz],[x1, x2, z])
