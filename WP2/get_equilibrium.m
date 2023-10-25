@@ -6,5 +6,5 @@ function [x1eq,x2eq] = get_equilibrium(u)
     ie = 0.003;
 
     x2eq = (p3*(u-ie))/p2;
-    x1eq = p1*ge./(p1+x2eq);
+    x1eq = (p1*ge)./(p1+x2eq);
 end
