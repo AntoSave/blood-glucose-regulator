@@ -1,6 +1,6 @@
 %x1 concentrazione del glucosio
 %x2 concentrazione di insulina nei liquidi interstiziali 
-
+clear all, clc;
 p1 = 0.0151; %tasso base di rimozione del glucosio dal sangue
 p2 = 0.0313; %tasso rimozione del glucosio dovuto all'insulina
 p3 = 0.0097;
@@ -87,7 +87,12 @@ plot(t,y)
 matlab.apputil.run('PhasePlane')
 
 % Adesso simuliamo il controllore v0
-sim('WP1_sym.slx')
+simout = sim('WP1_sym.slx');
+t = simout.t;
+t = t.Time;
+y = simout.y;
+stepinfo(y,t,x1_eq)
+%% 
 
 %% DA CANCELLARE
 % Quindi il sistema a ciclo chiuso è asintoticamente stabile ma la presenza
