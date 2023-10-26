@@ -31,16 +31,12 @@ matlab.apputil.run('PhasePlane')
 
 % Simulazione del sistema a ciclo aperto per u=1.003
 tspan = [0 250];
-x0=[0.001 0.01];
+x0=[0 0];
 u=1.003;
 [t,x] = ode45(@(t,x) SYS([x.' u]), tspan, x0);
 x1=x(:,1);
 x2=x(:,2);
 
-plot(t,x1,'r');
-xlabel('t');
-ylabel('y');
-figure
 plot(t,x1,'r',t,x2,'b');
 xlabel('t');
 figure
@@ -50,7 +46,7 @@ ylabel('x2');
 xlim([-2 2.5]);
 ylim([-0.5, 0.5]);
 
-stepinfo(x1,t,x1(end)) %Tempo di assestamento di 125min e overshoot del 140%
+stepinfo(x1,)
 
 %% Linearizzazione attorno al punto di equilibrio per u=1.003
 %Punto di equilibrio per u=1.003
@@ -96,11 +92,8 @@ matlab.apputil.run('PhasePlane')
 simout = sim('WP1_sym.slx');
 t = simout.t;
 t = t.Time;
-u = simout.u;
 y = simout.y;
-stepinfo(y,t,x1_eq) %Tempo di assestamento di 0.48min e overshoot del 39%
-stepinfo(u,t,u(end)) %Picco di -72188
-
+stepinfo(y,t,x1_eq)
 %% 
 
 %% DA CANCELLARE

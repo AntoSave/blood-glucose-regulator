@@ -1,3 +1,4 @@
+clear all, clc;
 %x1 concentrazione del glucosio
 %x2 concentrazione di insulina nei liquidi interstiziali 
 
@@ -18,6 +19,10 @@ C = [1 0];
 D = [0];
 
 %% Progettazione v1 con LQR
+% Abbiamo scelto di utilizzare LQR perché, oltre a cancellare le
+% oscillazioni, il nostro obiettivo è quello di ridurre lo sforzo di
+% controllo.
+
 x_eq = [x1_eq; x2_eq];
 sys = ss(A,B,C,D);
 WR = [B A*B]
@@ -33,7 +38,9 @@ simout = sim('v1_lqr.slx');
 t = simout.t;
 t = t.Time;
 y = simout.y;
-stepinfo(y,t,x1_eq)
+u = simout.u;
+stepinfo(y,t,x1_eq) %Tempo di assestamento di 10.6min e overshoot del 0%
+stepinfo(u,t,u(end)) %Picco di 28.5
 
 %% Progettazione v1 con azione integrale + pole placement
 % Adesso devo verificare la raggiungibilità per il sistema esteso
