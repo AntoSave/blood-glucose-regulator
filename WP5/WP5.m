@@ -35,13 +35,30 @@ x2_eq=sol.x2
 z_eq=sol.z
 
 %% Sistema con solo P e verificare se è controllabile vedendo la matrice dinamica A se ha abbastanza gradi di libertà
+syms kp x1 x2 sigma
+dx1 = -(p1+x2)*x1+p1*ge;
+dx2 = -(p2*x2)+p3*(kp*(sigma-x1)-ie);
+
+sol = solve([dx1==0, dx2==0],[x1, x2]); % Ottengo due soluzioni -> due punti di equilibrio
+x1_eq=sol.x1
+x2_eq=sol.x2
+
 
 %% Linearizzazione intorno ai trim point
-J_a=jacobian([dx1, dx2, dz],[x1, x2, z])
-J_b=jacobian([dx1, dx2, dz], sigma)
+% J_a=jacobian([dx1, dx2, dz],[x1, x2, z])
+% J_b=jacobian([dx1, dx2, dz], sigma)
+% 
+% A=subs(J_a,{'x1','x2'}, [x1_eq, x2_eq])
+% B=subs(J_b, 'z', z_eq) % Inutile ????
 
-A=subs(J_a,{'x1','x2'}, [x1_eq, x2_eq])
-B=subs(J_b, 'z', z_eq) % Inutile ????
+J_a=jacobian([dx1, dx2],[x1, x2])
+J_b=jacobian([dx1, dx2], sigma)
+
+A=subs(J_a,{'x1','x2'}, [x1_eq(1,1), x2_eq(1,1)]) % Vado a sostituire con il primo punto di eq.
+
+% A=subs(J_a,'x1', x1_eq)
+% A=subs(A, 'x2', x2_eq)
+% B=subs(J_b, 'z', z_eq) % Inutile ????
 
 %% Sintesi dei controllori per ogni trim point
 % calcoliamo il polinomio caratteristico 
@@ -58,32 +75,29 @@ syms zita omega_n
 charpol = charpoly(A);
 
 desired_pol = [1, 2*zita*omega_n, omega_n^2];
-sol = solve(charpol == desired_pol, [ki, kp], ReturnConditions=true);
+sol = solve(charpol == desired_pol, kp, ReturnConditions=true)
 %sol contiene i guadagni parametrizzati in zita e omega_n
 zita = 0.9;
-ts = 1; %un secondo
+ts = 10; % 10 minuti
 omega_n = 2.7/ts;
-ki = simplify(subs(sol.ki,{'omega_n'},[omega_n]))
-kp = simplify(subs(sol.kp,{'omega_n','zita'},[omega_n,zita]))
+% ki = simplify(subs(sol.ki,{'omega_n'},[omega_n]))
+kp = subs(sol,{'omega_n','zita'},[omega_n, zita])
 
-%%
-% assunzione
-gains.Kp=2*zeta*w0*psi
+%% Creiamo la tabella di scheduling
+r= 0.0451;
+Kp_sigma=double(subs(kp.kp, 'sigma', r));
 
-% sintesi controllori
-psi=0.1*sigma^2+1
-r=[0:0.2:2];
-Kp_sigma=[];
-Ki_sigma=[];
+% r=[0:0.2:2];
+% Kp_sigma=[];
+% Kp_sigma=[Kp_sigma, double(subs(kp.kp, 'sigma', r))];
 
-for i=r
-    Kp_sigma=[Kp_sigma, double(subs(gains.Kp, 'psi', double(subs(psi, 'sigma', i))))];
-    Ki_sigma=[Ki_sigma, double(subs(gains.Ki, 'psi', double(subs(psi, 'sigma', i))))];
-end
+% for i=r
+%     Kp_sigma=[Kp_sigma, double(subs(kp, 'sigma', i))];
+% end
 
 vpa(Kp_sigma)
-vpa(Ki_sigma)
 
 %% Simulazione
-standard_model='Lezione4_1.sls';
+%% TODO: Simulare con il sistema linearizzato per vedere se funzia
+
 
