@@ -39,8 +39,34 @@ t = simout.t;
 t = t.Time;
 y = simout.y;
 u = simout.u;
-stepinfo(y,t,x1_eq) %Tempo di assestamento di 10.6min e overshoot del 0%
-stepinfo(u,t,u(end)) %Picco di 28.5
+y_stepinfo = stepinfo(y,t,x1_eq) %Tempo di assestamento di 10.6min e overshoot del 0%
+u_stepinfo = stepinfo(u,t,u(end)) %Picco di 28.5
+
+
+
+% y_stepinfo = 
+%          RiseTime: 5.8766
+%     TransientTime: 10.6519
+%      SettlingTime: 10.5901
+%       SettlingMin: 0.0407
+%       SettlingMax: 0.0450
+%         Overshoot: 0
+%        Undershoot: 0
+%              Peak: 0.0450
+%          PeakTime: 20
+% 
+% u_stepinfo = 
+%          RiseTime: 0
+%     TransientTime: 4.4558
+%      SettlingTime: 10.9631
+%       SettlingMin: 1.0038
+%       SettlingMax: 28.5332
+%         Overshoot: 2.7425e+03
+%        Undershoot: 0
+%              Peak: 28.5332
+%          PeakTime: 0
+
+
 
 %% Progettazione v1 con azione integrale + pole placement
 % Adesso devo verificare la raggiungibilità per il sistema esteso
