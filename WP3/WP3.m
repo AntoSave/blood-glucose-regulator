@@ -32,8 +32,8 @@ a2 = polyA(1);
 W0_tilde = inv([1,0;a1,1]); %in alternativa W0_tilde = [1 0;-a1 1];
 
 % calcolo dei coefficienti del polinomio desiderato
-Sett_time = 1;
-w0 = 4.0/Sett_time;
+Sett_time = 2;
+w0 = 5.8/Sett_time;
 zeta = 1;
 pd1 = 2*zeta*w0;
 pd2 = w0^2;
@@ -58,40 +58,84 @@ x_hat = simout.x_hat.Data;
 x_hat_1_stepinfo = stepinfo(x_hat(:,1),t,x1_eq) % Tempo di assestamento 12.91
 x_hat_2_stepinfo = stepinfo(x_hat(:,2),t,x2_eq) % Tempo di assestamento 6.3369. Overshoot: 394.6826
 
-y_stepinfo = stepinfo(y,t,x1_eq) %Tempo di assestamento di 12.97min e overshoot del 50%
-u_stepinfo = stepinfo(u,t,u(end)) %Picco di 122
+y_stepinfo = stepinfo(y,t,x1_eq) %Tempo di assestamento di 12.97min e overshoot del 46%
+u_stepinfo = stepinfo(u,t,u(end)) %Picco di 189
 
 
 
 % Sett_time = 1;
-% w0 = 5.6/Sett_time;
-% zeta =sqrt(2)/2;
+% w0 = 5.8/Sett_time;
+% zeta =1;
 % y_stepinfo = 
-%          RiseTime: 1.3623
-%     TransientTime: 12.6225
-%      SettlingTime: 12.5599
-%       SettlingMin: 0.0420
-%       SettlingMax: 0.0646
-%         Overshoot: 43.2214
+%          RiseTime: 1.4121
+%     TransientTime: 12.7872
+%      SettlingTime: 12.7272
+%       SettlingMin: 0.0449
+%       SettlingMax: 0.0659
+%         Overshoot: 46.1649
 %        Undershoot: 0
-%              Peak: 0.0646
-%          PeakTime: 3.1392
+%              Peak: 0.0659
+%          PeakTime: 3.1894
 % 
 % 
 % u_stepinfo = 
-%          RiseTime: 0.0029
-%     TransientTime: 3.9894
-%      SettlingTime: 11.3523
-%       SettlingMin: 0.9487
-%       SettlingMax: 52.0459
-%         Overshoot: 5.1407e+03
-%        Undershoot: 2.2374e+04
-%              Peak: 222.1965
-%          PeakTime: 0.1515
+%          RiseTime: 0.0088
+%     TransientTime: 4.1841
+%      SettlingTime: 11.4610
+%       SettlingMin: 0.9383
+%       SettlingMax: 47.8568
+%         Overshoot: 4.7213e+03
+%        Undershoot: 1.9093e+04
+%              Peak: 189.5179
+%          PeakTime: 0.1651
 
+% Sett_time = 1.5;
+% y_stepinfo = 
+%          RiseTime: 1.4813
+%     TransientTime: 13.0552
+%      SettlingTime: 12.9933
+%       SettlingMin: 0.0413
+%       SettlingMax: 0.0683
+%         Overshoot: 51.3979
+%        Undershoot: 0
+%              Peak: 0.0683
+%          PeakTime: 3.2388
+% 
+% 
+% u_stepinfo = 
+%          RiseTime: 0.0107
+%     TransientTime: 4.5370
+%      SettlingTime: 11.5940
+%       SettlingMin: 0.7800
+%       SettlingMax: 42.4907
+%         Overshoot: 4.1842e+03
+%        Undershoot: 1.1805e+04
+%              Peak: 117.0774
+%          PeakTime: 0.2722
 
-
-
+% Sett_time = 2;
+% y_stepinfo = 
+%          RiseTime: 1.5523
+%     TransientTime: 13.3080
+%      SettlingTime: 13.2433
+%       SettlingMin: 0.0413
+%       SettlingMax: 0.0706
+%         Overshoot: 56.6516
+%        Undershoot: 0
+%              Peak: 0.0706
+%          PeakTime: 3.6155
+% 
+% 
+% u_stepinfo = 
+%          RiseTime: 0.0114
+%     TransientTime: 4.8165
+%      SettlingTime: 11.6587
+%       SettlingMin: 0.2865
+%       SettlingMax: 37.5991
+%         Overshoot: 3.6940e+03
+%        Undershoot: 8.5971e+03
+%              Peak: 85.1991
+%          PeakTime: 0.2303
 
 % è possibile controllare che i coefficienti del polinomio caratteristico dell'osservatore siano
 % quelli desiderati
