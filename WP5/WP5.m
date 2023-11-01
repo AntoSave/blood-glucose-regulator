@@ -12,27 +12,31 @@ ge = 0.97;
 ie = 0.003;
 u_eq=1.003;
 
+%% Sistema senza controllore linearizzato
+
+
+
 %% Individuazione dei Trim Points
 % Scelgo sigma=r e come controllore lo state feedback
 
-syms kr x1 x2 sigma k1 k2
-dx1 = -(p1+x2)*x1+p1*ge;
-dx2 = -(p2*x2)+p3*(-[k1 k2]*[x1, x2].'+kr*sigma-ie);
-
-sol = solve([dx1==0, dx2==0],[x1, x2]);
-x1_e=sol.x1
-u2_e=sol.x2
+% syms kr x1 x2 sigma k1 k2
+% dx1 = -(p1+x2)*x1+p1*ge;
+% dx2 = -(p2*x2)+p3*(-[k1 k2]*[x1, x2].'+kr*sigma-ie);
+% 
+% sol = solve([dx1==0, dx2==0],[x1, x2]);
+% x1_e=sol.x1
+% u2_e=sol.x2
 
 %% Scelgo sigma=r e come controllore il PI
-syms kp ki x1 x2 sigma z
-dx1 = -(p1+x2)*x1+p1*ge;
-dx2 = -(p2*x2)+p3*(kp*(x1-sigma)+ki*z-ie);
-dz = x1-sigma;      % Sarebbe dz=y-r, ma ho già sostituito
-
-sol = solve([dx1==0, dx2==0, dz==0],[x1, x2, z]);
-x1_eq=sol.x1
-x2_eq=sol.x2
-z_eq=sol.z
+% syms kp ki x1 x2 sigma z
+% dx1 = -(p1+x2)*x1+p1*ge;
+% dx2 = -(p2*x2)+p3*(kp*(x1-sigma)+ki*z-ie);
+% dz = x1-sigma;      % Sarebbe dz=y-r, ma ho già sostituito
+% 
+% sol = solve([dx1==0, dx2==0, dz==0],[x1, x2, z]);
+% x1_eq=sol.x1
+% x2_eq=sol.x2
+% z_eq=sol.z
 
 %% Sistema con solo P e verificare se è controllabile vedendo la matrice dinamica A se ha abbastanza gradi di libertà
 syms kp x1 x2 sigma
@@ -62,13 +66,13 @@ A=subs(J_a,{'x1','x2'}, [x1_eq(1,1), x2_eq(1,1)]) % Vado a sostituire con il pri
 
 %% Sintesi dei controllori per ogni trim point
 % calcoliamo il polinomio caratteristico 
-pol=[1, -trace(A), det(A)]
-
-Tr=1;
-w0=2.7/Tr;
-zeta=0.9;
-pol_d=[1 2*zeta*w0 w0^2];
-gains=solve(pol==pol_d, [kp ki]);
+% pol=[1, -trace(A), det(A)]
+% 
+% Tr=1;
+% w0=2.7/Tr;
+% zeta=0.9;
+% pol_d=[1 2*zeta*w0 w0^2];
+% gains=solve(pol==pol_d, [kp ki]);
 
 %% Metodo antonio
 syms zita omega_n
@@ -80,6 +84,7 @@ sol = solve(charpol == desired_pol, kp, ReturnConditions=true)
 zita = 0.9;
 ts = 10; % 10 minuti
 omega_n = 2.7/ts;
+% omega_n = 5.8/ts;
 % ki = simplify(subs(sol.ki,{'omega_n'},[omega_n]))
 kp = subs(sol,{'omega_n','zita'},[omega_n, zita])
 
