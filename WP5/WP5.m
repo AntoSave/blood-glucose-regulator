@@ -11,6 +11,44 @@ u_eq=1.003;
 %x1 concentrazione del glucosio
 %x2 concentrazione di insulina nei liquidi interstiziali 
 
+%% Controllore state feedback e sigma=r (sigma=x1)
+%Consideriamo il sistema non lineare
+syms x1 x2 u
+dx1 = -(p1+x2)*x1+p1*ge;
+dx2 = -(p2*x2)+p3*(u-ie);
+
+sol = solve([dx1==0, dx2==0],[x1, x2]);
+
+%Poniamo sigma=r.
+%Noi vogliamo che y_eq = r -> x1_eq = r = sigma
+syms sigma 
+sol = solve([x1==sol.x1(1), x2==sol.x2(1), x1==sigma],[x1, x2, u]); %Qui poinamo x1_eq==sigma e troviamo x1_eq, x2_eq e u_eq in funzione di sigma
+x1_eq = sol.x1(1);
+x2_eq = sol.x2(1);
+u_eq = sol.u(1);
+
+% Troviamo le Jacobiane e sostituiamoci le condizioni operative per
+% ottenere le matrici del sistema linearizzato
+J_A=jacobian([dx1, dx2],[x1, x2]);
+J_B=jacobian([dx1, dx2], u);
+A = subs(J_A,{'x1','x2'}, [x1_eq, x2_eq]);
+B = J_B;
+C = [1 0];
+
+%Matrice dinamica a ciclo chiuso
+syms k1 k2
+K = [k1 k2];
+A_CC = A-B*K;
+
+% Equipollenza dei polinomi
+syms s zita w_n
+pol_coeff=charpoly(A_CC); 
+desired_pol=(s^2 + 2*zita*w_n*s + w_n^2);
+desired_pol_coeff = fliplr(coeffs(desired_pol, s));
+
+sol = solve(pol_coeff==desired_pol_coeff,[k1, k2],"ReturnConditions",true);
+
+
 %% Controllore PI e sigma=r
 %Consideriamo il sistema non lineare
 syms x1 x2 u
