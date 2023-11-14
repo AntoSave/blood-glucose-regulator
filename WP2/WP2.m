@@ -27,8 +27,8 @@ x_eq = [x1_eq; x2_eq];
 sys = ss(A,B,C,D);
 WR = [B A*B]
 rank(WR) %il sistema è raggiungibile.
-Qu = 0.0001;
-Qx = [10 0;0 1];
+Qu = 0.00001; %0.0001;
+Qx = [1 0;0 0];
 K = lqr(sys, Qx, Qu);
 %L'LQR stabilizza il sistema linearizzato attorno a (0,0).
 %La legge di controllo per il sistema originale sarà u=-K(x-x_eq)+u_eq
@@ -41,8 +41,7 @@ y = simout.y;
 u = simout.u;
 y_stepinfo = stepinfo(y,t,x1_eq) %Tempo di assestamento di 10.6min e overshoot del 0%
 u_stepinfo = stepinfo(u,t,u(end)) %Picco di 28.5
-
-
+min(u)
 
 % y_stepinfo = 
 %          RiseTime: 5.8766
@@ -66,7 +65,24 @@ u_stepinfo = stepinfo(u,t,u(end)) %Picco di 28.5
 %              Peak: 28.5332
 %          PeakTime: 0
 
-
+%% Progettazione v1 con pole placement
+syms zita omega_n k1 k2
+K = [k1 k2];
+zita=1;
+ts=7.5;
+omega_n = 4/ts;
+charpol = charpoly(A-B*K);
+desired_pol = [1, 2*zita*omega_n, omega_n^2];
+sol = solve(charpol == desired_pol, [k1, k2], ReturnConditions=true)
+K = [double(sol.k1) double(sol.k2)];
+simout = sim('v1_pole_placement.slx');
+t = simout.t;
+t = t.Time;
+y = simout.y;
+u = simout.u;
+y_stepinfo = stepinfo(y,t,x1_eq)
+u_stepinfo = stepinfo(u,t,u(end))
+min(u)
 
 %% Progettazione v1 con azione integrale + pole placement
 % Adesso devo verificare la raggiungibilità per il sistema esteso

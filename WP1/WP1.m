@@ -10,28 +10,98 @@ u_eq = 1.003;
 
 %% Analisi del sistema a ciclo aperto
 % Plot dei punti di equilibrio al variare di u
+figure;
 [x1eq,x2eq] = get_equilibrium([-2:0.01:-0.1]);
 directedplot(x1eq.',x2eq.');
-hold on
+hold on;
 [x1eq,x2eq] = get_equilibrium([0:0.01:2]);
 directedplot(x1eq.',x2eq.');
-xlabel("x1")
-ylabel("x2")
-hold on
+xlabel("x1");
+ylabel("x2");
+hold on;
 % Plot dei punti notevoli u=0 e u=1.003
-[x1eq0,x2eq0] = get_equilibrium(0)
-[x1eq1,x2eq1] = get_equilibrium(1.003)
-scatter(x1eq0,x2eq0)
-text(x1eq0,x2eq0,'u=0')
-scatter(x1eq1,x2eq1)
-text(x1eq1,x2eq1,'u=1.003')
+[x1eq0,x2eq0] = get_equilibrium(0);
+[x1eq1,x2eq1] = get_equilibrium(1.003);
+scatter(x1eq0,x2eq0);
+text(x1eq0,x2eq0,'u=0');
+scatter(x1eq1,x2eq1);
+text(x1eq1,x2eq1,'u=1.003');
+grid on;
+title('Equilibrium points');
 
-% Piano delle fasi per u=1.003
+% Piano delle fasi per u=0
 matlab.apputil.run('PhasePlane')
+
+% Simulazione dell'evoluzione libera del sistema a ciclo aperto senza insulina
+tspan = [0 600];
+x0=[2 0]; %High glucose and low insulin
+u=0;
+[t,x] = ode45(@(t,x) SYS([x.' u]), tspan, x0);
+x1=x(:,1);
+x2=x(:,2);
+
+figure;
+sgtitle('System evolution without insulin')
+subplot(2,1,1);
+hold on;
+title('Glucose evolution');
+plot(t,x1,'r');
+xlabel('t');
+ylabel('x1');
+subplot(2,1,2);
+hold on;
+title('Insulin evolution');
+plot(t,x2,'b');
+xlabel('t');
+ylabel('x2');
+ylim([-0.1 0.1]);
+
+figure;
+plot(x1,x2,'r');
+xlabel('x1');
+ylabel('x2');
+axis padded
+title('System evolution without insulin (phase plane)');
+grid on;
+
+stepinfo(x1,t,x1(end)) %Tempo di assestamento di circa 265min
+
+% Simulazione dell'evoluzione libera del sistema a ciclo aperto con insulina
+tspan = [0 600];
+x0=[2 1]; %High glucose and high insulin
+u=0;
+[t,x] = ode45(@(t,x) SYS([x.' u]), tspan, x0);
+x1=x(:,1);
+x2=x(:,2);
+
+figure;
+sgtitle('System evolution with insulin')
+subplot(2,1,1);
+hold on;
+title('Glucose evolution');
+plot(t,x1,'r');
+xlabel('t');
+ylabel('x1');
+subplot(2,1,2);
+hold on;
+title('Insulin evolution');
+plot(t,x2,'b');
+xlabel('t');
+ylabel('x2');
+
+figure;
+plot(x1,x2,'r');
+xlabel('x1');
+ylabel('x2');
+axis padded
+title('System evolution with insulin (phase plane)');
+grid on;
+
+stepinfo(x1,t,x1(end)) %Tempo di assestamento di circa 415min
 
 % Simulazione del sistema a ciclo aperto per u=1.003
 tspan = [0 250];
-x0=[0.001 0.01];
+x0=[0.7 0];
 u=1.003;
 [t,x] = ode45(@(t,x) SYS([x.' u]), tspan, x0);
 x1=x(:,1);
@@ -50,7 +120,7 @@ ylabel('x2');
 xlim([-2 2.5]);
 ylim([-0.5, 0.5]);
 
-stepinfo(x1,t,x1(end)) %Tempo di assestamento di 125min e overshoot del 140%
+stepinfo(x1,t,x1(end)) %Tempo di assestamento di 125min
 
 %% Linearizzazione attorno al punto di equilibrio per u=1.003
 %Punto di equilibrio per u=1.003
@@ -93,13 +163,13 @@ plot(t,y)
 matlab.apputil.run('PhasePlane')
 
 % Adesso simuliamo il controllore v0
-simout = sim('WP1_sym.slx');
+simout = sim('v0_sim.slx');
 t = simout.t;
 t = t.Time;
 u = simout.u;
 y = simout.y;
-stepinfo(y,t,x1_eq) %Tempo di assestamento di 0.48min e overshoot del 39%
-stepinfo(u,t,u(end)) %Picco di -72188
+stepinfo(y,t,x1_eq) %Tempo di assestamento di 0.52min%%%%0.48min e overshoot del 39%
+stepinfo(u,t,u(end)) %Picco di 1082400 %%%-72188
 
 %% 
 
