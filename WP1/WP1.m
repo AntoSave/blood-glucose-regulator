@@ -154,9 +154,7 @@ c_poly = sym2poly((s-lambda1)*(s-lambda2)); %The characteristic polynomial of A-
 omega_c = sqrt(c_poly(3))
 zita = c_poly(2)/(omega_c*2)
 % Simulazione del sistema linearizzato a ciclo chiuso:
-t=[0:0.1:1000];
-y = step(ss(A-B*K,B.*kr,C,0),t);
-plot(t,y)
+step(ss(A-B*K,B.*kr,C,0))
 
 %% Analisi del controllore v0 sul sistema non lineare
 % Piano delle fasi a cilo chiuso per r=0.0451
@@ -168,8 +166,8 @@ t = simout.t;
 t = t.Time;
 u = simout.u;
 y = simout.y;
-stepinfo(y,t,x1_eq) %Tempo di assestamento di 0.52min%%%%0.48min e overshoot del 39%
-stepinfo(u,t,u(end)) %Picco di 1082400 %%%-72188
+y_info = stepinfo(y,t,x1_eq) %Tempo di assestamento di 0.52min%%%%0.48min e overshoot del 39%
+u_info = stepinfo(u,t,u(end)) %Picco di 1082400 %%%-72188
 
 %% 
 

@@ -29,7 +29,7 @@ x_eq = [x1_eq; x2_eq];
 sys = ss(A,B,C,D);
 WR = [B A*B]
 rank(WR) %il sistema è raggiungibile.
-Qu = 0.0001; %0.0001;
+Qu = 1e-4; %0.0001;
 Qx = [10 0;0 1];
 K = lqr(sys, Qx, Qu);
 %L'LQR stabilizza il sistema linearizzato attorno a (0,0).
@@ -41,10 +41,11 @@ t = simout.t;
 t = t.Time;
 y = simout.y;
 u = simout.u;
-y_stepinfo = stepinfo(y,t,x1_eq) %Tempo di assestamento di 10.6min e overshoot del 0%
-u_stepinfo = stepinfo(u,t,u(end)) %Picco di 28.5
+y_stepinfo = stepinfo(y,t,x1_eq) %Tempo di assestamento di 12.97min e undershoot dello 0%
+u_stepinfo = stepinfo(u,t,u(end)) %Picco di 34.45
 min(u)
-
+% SOTTO CI SONO RISULTATI VECCHI, VEDERE SE RIUSCIAMO AD ABBASSARE IL TEMPO
+% DI ASSESTAMENTO A 10.6
 % y_stepinfo = 
 %          RiseTime: 5.8766
 %     TransientTime: 10.6519
