@@ -18,17 +18,19 @@ B = [0; p3];
 C = [1 0];
 D = [0];
 
+x_eq = [x1_eq; x2_eq];
+
 %% Progettazione v1 con LQR
 % Abbiamo scelto di utilizzare LQR perché, oltre a cancellare le
 % oscillazioni, il nostro obiettivo è quello di ridurre lo sforzo di
 % controllo.
 
-x_eq = [x1_eq; x2_eq];
+
 sys = ss(A,B,C,D);
 WR = [B A*B]
 rank(WR) %il sistema è raggiungibile.
-Qu = 0.00001; %0.0001;
-Qx = [1 0;0 0];
+Qu = 0.0001; %0.0001;
+Qx = [10 0;0 1];
 K = lqr(sys, Qx, Qu);
 %L'LQR stabilizza il sistema linearizzato attorno a (0,0).
 %La legge di controllo per il sistema originale sarà u=-K(x-x_eq)+u_eq
@@ -75,6 +77,17 @@ charpol = charpoly(A-B*K);
 desired_pol = [1, 2*zita*omega_n, omega_n^2];
 sol = solve(charpol == desired_pol, [k1, k2], ReturnConditions=true)
 K = [double(sol.k1) double(sol.k2)];
+simout = sim('v1_pole_placement.slx');
+t = simout.t;
+t = t.Time;
+y = simout.y;
+u = simout.u;
+y_stepinfo = stepinfo(y,t,x1_eq)
+u_stepinfo = stepinfo(u,t,u(end))
+min(u)
+
+%% Progettazione v1 con pole placement "a mano"
+K = place(A,B,[-1 -2]);
 simout = sim('v1_pole_placement.slx');
 t = simout.t;
 t = t.Time;
