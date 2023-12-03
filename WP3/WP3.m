@@ -23,7 +23,7 @@ D = [0];
 %% Osservatore
 % matrice di osservabilità
 W0 = [C;C*A];
-rank(W0); 
+rank(W0);
 
 % matrice di osservabilità in forma canonica
 syms x
