@@ -156,11 +156,11 @@ y_stepinfo = stepinfo(y,t,x1_eq)
 u_stepinfo = stepinfo(u,t,u(end))
 min(u)
 
-%% Tentativo v1 con LQI
+%% Progettazione con LQI
 sys = ss(A,B,C,D);
 
-Qu = 3e-6; %0.0001;
-Qx = [10 0 0;0 0.2 0;0 0 1];
+Qu = 6e-6; %0.0001;
+Qx = [10 0 0;0 0.1 0;0 0 1];
 [K,S,e] = lqi(sys,Qx,Qu,0)
 %L'LQR stabilizza il sistema linearizzato attorno a (0,0).
 %La legge di controllo per il sistema originale sarà u=-K(x-x_eq)+u_eq

@@ -7,7 +7,7 @@ assume(beta<0)
 charpoly = [1 -alpha -beta];
 %settling = 4/omega0
 %rise time = 2.7/omega0
-ts = 8.5;
+ts = 6;
 zita=1;
 num = interp1([0.5 1/sqrt(2) 1], [8.0 5.9 5.8],zita);
 omega_n = num/ts;
@@ -47,11 +47,11 @@ desired_poly_coeff = fliplr(coeffs(desired_poly, s));
 sol = solve(char_poly_coeff==desired_poly_coeff,[alpha, beta, gamma],"ReturnConditions",true);
 
 
-ts = 8.5;
+ts = 6;
 zita=1;
 num = interp1([0.5 1/sqrt(2) 1], [8.0 5.9 5.8],zita);
 omega_n = num/ts;
-p = -5/150;
+p = -2;
 alpha = double(subs(sol.alpha,{'zita','w_n','p'}, [zita, omega_n, p]));
 beta = double(subs(sol.beta,{'zita','w_n','p'}, [zita, omega_n, p]));
 gamma = double(subs(sol.gamma,{'zita','w_n','p'}, [zita, omega_n, p]));
