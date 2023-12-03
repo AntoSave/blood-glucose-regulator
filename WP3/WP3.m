@@ -14,7 +14,7 @@ x2_eq = x_eq(2);
 % Il K è il risultato del WP2
 %K = [-138.0306 54.1580]; 
 %K = [-49.7747 99.1105];
-K = [-84.7723   39.1776];
+K = [-1272.43538878761    165.594962781475    408.248290463863];
 A = [-p1-x_eq(2) -x_eq(1); 0 -p2];
 B = [0; p3];
 C = [1 0];
@@ -34,16 +34,16 @@ a2 = polyA(1);
 W0_tilde = inv([1,0;a1,1]); %in alternativa W0_tilde = [1 0;-a1 1];
 
 % calcolo dei coefficienti del polinomio desiderato
-Sett_time = 2.5;
+Sett_time = 2.2;
 zeta = 1;
-w0 = 4/Sett_time;
+w0 = 5.8/Sett_time;
 pd1 = 2*zeta*w0;
 pd2 = w0^2;
 
 L = inv(W0)*W0_tilde*[pd1-a1;pd2-a2];
 L = eval(L);
 
-simout = sim('v1_lqr_observer.slx');
+simout = sim('v1_lqi_observer.slx');
 t = simout.t;
 t = t.Time;
 y = simout.y;
@@ -61,6 +61,20 @@ x_hat_2_stepinfo = stepinfo(x_hat(:,2),t,x2_eq) % Tempo di assestamento 6.3369. 
 y_stepinfo = stepinfo(y,t,y(end)) %Tempo di assestamento di 12.97min e overshoot del 46%
 u_stepinfo = stepinfo(u,t,u(end)) %Picco di 189
 u_min = min(u)
+
+
+figure
+plot(t,y)
+title("Controller v1. LQI with observer")
+xlabel("t [min]")
+ylabel("y [g/l]")
+
+
+figure
+plot(t,u)
+title("Controller v1. LQI with observer")
+xlabel("t [min]")
+ylabel("u [U/l]")
 
 
 % Sett_time = 1;
