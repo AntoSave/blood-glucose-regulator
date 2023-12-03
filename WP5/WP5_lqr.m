@@ -42,8 +42,8 @@ K_sigma = [];
 for i = sigma
     temp_A = double(subs(A,{'sigma'},i));
     sys = ss(temp_A,B,C,D);
-    Qu = 0.0001;
-    Qx = [10 0;0 1];
+    Qu = 1e-4;
+    Qx = [10 0;0 0.1];
     [K,S,P] = lqr(sys, Qx, Qu);
     K_sigma = [K_sigma, K.'];
 end

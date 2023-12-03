@@ -48,6 +48,13 @@ desired_pol_coeff = fliplr(coeffs(desired_pol, s));
 
 sol = solve(pol_coeff==desired_pol_coeff,[k1, k2],"ReturnConditions",true);
 
+simout = sim('v3_sim_sf_sigma_r.slx');
+y = simout.y;
+t = simout.t;
+u = simout.u(1,:);
+
+y_stepinfo = stepinfo(y,t,y(end))
+u_stepinfo = stepinfo(u,t,u(end))
 
 %% Controllore PI e sigma=r
 %Consideriamo il sistema non lineare

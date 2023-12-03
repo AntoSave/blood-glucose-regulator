@@ -30,7 +30,7 @@ sys = ss(A,B,C,D);
 WR = [B A*B]
 rank(WR) %il sistema è raggiungibile.
 Qu = 1e-4; %0.0001;
-Qx = [10 0;0 1];
+Qx = [10 0;0 0.1];
 K = lqr(sys, Qx, Qu);
 %L'LQR stabilizza il sistema linearizzato attorno a (0,0).
 %La legge di controllo per il sistema originale sarà u=-K(x-x_eq)+u_eq
@@ -41,39 +41,108 @@ t = simout.t;
 t = t.Time;
 y = simout.y;
 u = simout.u;
-y_stepinfo = stepinfo(y,t,x1_eq) %Tempo di assestamento di 12.97min e undershoot dello 0%
+y_stepinfo = stepinfo(y,t,x1_eq) %Tempo di assestamento di 12.97min e undershoot dello 0.46%
 u_stepinfo = stepinfo(u,t,u(end)) %Picco di 34.45
 min(u)
-% SOTTO CI SONO RISULTATI VECCHI, VEDERE SE RIUSCIAMO AD ABBASSARE IL TEMPO
-% DI ASSESTAMENTO A 10.6
+
+% Qu = 1e-4; %0.0001;
+% Qx = [10 0;0 0.1];
+
 % y_stepinfo = 
-%          RiseTime: 5.8766
-%     TransientTime: 10.6519
-%      SettlingTime: 10.5901
-%       SettlingMin: 0.0407
-%       SettlingMax: 0.0450
-%         Overshoot: 0
+% 
+%   struct with fields:
+% 
+%          RiseTime: 0
+%     TransientTime: 10.2588
+%      SettlingTime: 10.6199
+%       SettlingMin: 0.0449
+%       SettlingMax: 0.1052
+%         Overshoot: 133.4937
 %        Undershoot: 0
-%              Peak: 0.0450
-%          PeakTime: 20
+%              Peak: 0.1052
+%          PeakTime: 0.8130
+% 
+% 
+% u_stepinfo = 
+% 
+%   struct with fields:
+% 
+%          RiseTime: 0
+%     TransientTime: 10.4011
+%      SettlingTime: 18.0200
+%       SettlingMin: 0.5804
+%       SettlingMax: 17.8011
+%         Overshoot: 1.6748e+03
+%        Undershoot: 0
+%              Peak: 17.8011
+%          PeakTime: 0
+
+% Qu = 5e-5; %0.0001;
+% Qx = [10 0;0 0.1];
+
+% y_stepinfo = 
+% 
+%   struct with fields:
+% 
+%          RiseTime: 0
+%     TransientTime: 8.7786
+%      SettlingTime: 9.0864
+%       SettlingMin: 0.0449
+%       SettlingMax: 0.1037
+%         Overshoot: 130.1402
+%        Undershoot: 0
+%              Peak: 0.1037
+%          PeakTime: 0.5862
+% 
+% 
+% u_stepinfo = 
+% 
+%   struct with fields:
+% 
+%          RiseTime: 0
+%     TransientTime: 9.0302
+%      SettlingTime: 15.4960
+%       SettlingMin: 0.1666
+%       SettlingMax: 25.3692
+%         Overshoot: 2.4257e+03
+%        Undershoot: 0
+%              Peak: 25.3692
+%          PeakTime: 0
+
+% Qu = 1e-4; %0.0001;
+% Qx = [10 0;0 1];
+
+% y_stepinfo = 
+%          RiseTime: 0
+%     TransientTime: 12.2732
+%      SettlingTime: 12.9659
+%       SettlingMin: 0.0451
+%       SettlingMax: 0.1029
+%         Overshoot: 128.3237
+%        Undershoot: 0
+%              Peak: 0.1029
+%          PeakTime: 0.4832
 % 
 % u_stepinfo = 
 %          RiseTime: 0
-%     TransientTime: 4.4558
-%      SettlingTime: 10.9631
-%       SettlingMin: 1.0038
-%       SettlingMax: 28.5332
-%         Overshoot: 2.7425e+03
+%     TransientTime: 3.4206
+%      SettlingTime: 13.3783
+%       SettlingMin: 0.8228
+%       SettlingMax: 34.4520
+%         Overshoot: 3.3349e+03
 %        Undershoot: 0
-%              Peak: 28.5332
+%              Peak: 34.4520
 %          PeakTime: 0
+% ans =
+% 
+%     0.8228
 
 %% Progettazione v1 con pole placement
 syms zita omega_n k1 k2
 K = [k1 k2];
 zita=1;
 ts=7.5;
-omega_n = 4/ts;
+omega_n = 5.8/ts;
 charpol = charpoly(A-B*K);
 desired_pol = [1, 2*zita*omega_n, omega_n^2];
 sol = solve(charpol == desired_pol, [k1, k2], ReturnConditions=true)
@@ -98,17 +167,25 @@ y_stepinfo = stepinfo(y,t,x1_eq)
 u_stepinfo = stepinfo(u,t,u(end))
 min(u)
 
-%% Progettazione v1 con azione integrale + pole placement
-% Adesso devo verificare la raggiungibilità per il sistema esteso
-% estendiamo sia lo stato che l'ingresso per studiare la raggiungibilità
-% del nuovo sistema
-%Atilde = [A [0 0].'; C 0]
-%Btilde = [B [0 0].'; 0 -1]
+%% Tentativo v1 con LQI
+sys = ss(A,B,C,D);
 
-%Matrice di raggiungibilità
-%WR = [Btilde Atilde*Btilde Atilde^2*Btilde];
-%rank(WR) %il sistema è raggiungibile perché W_R ha rango massimo. Posso sintetizzare il controllore
+Qu = 1e-7; %0.0001;
+Qx = [1 0 0;0 1e-3 0;0 0 1];
+[K,S,e] = lqi(sys,Qx,Qu,0)
+%L'LQR stabilizza il sistema linearizzato attorno a (0,0).
+%La legge di controllo per il sistema originale sarà u=-K(x-x_eq)+u_eq
 
-%Adesso dobbiamo tarare K e Kr
-%K = place(Atilde, [B; 0], [-10 -15 -20]);
+simout = sim('v1_lqi.slx');
+t = simout.t;
+t = t.Time;
+y = simout.y;
+u = simout.u;
+y_stepinfo = stepinfo(y,t,x1_eq) %Tempo di assestamento di 12.97min e undershoot dello 0.46%
+u_stepinfo = stepinfo(u,t,u(end)) %Picco di 34.45
+min(u)
+
+
+
+
 

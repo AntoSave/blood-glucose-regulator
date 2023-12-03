@@ -12,7 +12,9 @@ x_eq = [0.0451; 0.3099];
 x1_eq = x_eq(1);
 x2_eq = x_eq(2);
 % Il K è il risultato del WP2
-K = [-49.7747 99.1105];
+%K = [-138.0306 54.1580]; 
+%K = [-49.7747 99.1105];
+K = [-84.7723   39.1776];
 A = [-p1-x_eq(2) -x_eq(1); 0 -p2];
 B = [0; p3];
 C = [1 0];
@@ -32,22 +34,20 @@ a2 = polyA(1);
 W0_tilde = inv([1,0;a1,1]); %in alternativa W0_tilde = [1 0;-a1 1];
 
 % calcolo dei coefficienti del polinomio desiderato
-Sett_time = 2;
-w0 = 5.8/Sett_time;
+Sett_time = 2.5;
 zeta = 1;
+w0 = 4/Sett_time;
 pd1 = 2*zeta*w0;
 pd2 = w0^2;
 
 L = inv(W0)*W0_tilde*[pd1-a1;pd2-a2];
-L = eval(L) 
+L = eval(L);
 
 simout = sim('v1_lqr_observer.slx');
 t = simout.t;
 t = t.Time;
 y = simout.y;
 u = simout.u;
-
-x = simout.x
 
 x_hat = simout.x_hat.Data;
 
@@ -58,9 +58,9 @@ x_hat = simout.x_hat.Data;
 x_hat_1_stepinfo = stepinfo(x_hat(:,1),t,x1_eq) % Tempo di assestamento 12.91
 x_hat_2_stepinfo = stepinfo(x_hat(:,2),t,x2_eq) % Tempo di assestamento 6.3369. Overshoot: 394.6826
 
-y_stepinfo = stepinfo(y,t,x1_eq) %Tempo di assestamento di 12.97min e overshoot del 46%
+y_stepinfo = stepinfo(y,t,y(end)) %Tempo di assestamento di 12.97min e overshoot del 46%
 u_stepinfo = stepinfo(u,t,u(end)) %Picco di 189
-
+u_min = min(u)
 
 
 % Sett_time = 1;
