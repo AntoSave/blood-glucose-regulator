@@ -162,8 +162,6 @@ sys = ss(A,B,C,D);
 Qu = 6e-6; %0.0001;
 Qx = [10 0 0;0 0.1 0;0 0 1];
 [K,S,e] = lqi(sys,Qx,Qu,0)
-%L'LQR stabilizza il sistema linearizzato attorno a (0,0).
-%La legge di controllo per il sistema originale sarà u=-K(x-x_eq)+u_eq
 
 simout = sim('v1_lqi.slx');
 t = simout.t;
