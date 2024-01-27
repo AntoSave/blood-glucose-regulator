@@ -70,7 +70,7 @@ u_stepinfo = stepinfo(u,t,u(end))
 %La funzione di trasferimento del sistema da controllare è:
 s = tf('s');
 P = 1/s^2;
-%rltool(P,1);
+rltool(P,1);
 C = 4.2975*(s+0.191)*(s+0.1311)/(s*(s+3.039));
 simout = sim('v2_sim_PID.slx');
 y = simout.y;
@@ -78,5 +78,5 @@ t = simout.t.Time;
 u = simout.u;
 y_stepinfo = stepinfo(y,t,y(end))
 u_stepinfo = stepinfo(u,t,u(end))
-undershoot = (min(y)-y(end))/y(end)
+undershoot = (min(y)-0.451)/0.451
 
