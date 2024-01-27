@@ -179,3 +179,18 @@ u_info = stepinfo(u,t,u(end)) %Picco di 1082400 %%%-72188
 %c_poly = sym2poly((s-lambda1)*(s-lambda2)); %The characteristic polynomial of A-BK
 %omega_c = sqrt(c_poly(3))
 %zita = c_poly(2)/(omega_c*2)
+plot(t, y)
+xlim([0,2])
+title('Controller v0 - Output')
+hold on
+plot(t,ones(size(t))*0.045102)
+ylabel('y [g/l]')
+xlabel('t [min]')
+legend('y','r')
+
+plot(t, u)
+xlim([0,2])
+title('Controller v0 - Control Input')
+ylabel('u [U/l]')
+xlabel('t [min]')
+legend('u')
