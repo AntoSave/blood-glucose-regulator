@@ -173,6 +173,20 @@ u_stepinfo = stepinfo(u,t,u(end)) %Picco di 34.45
 min(u)
 
 
+plot(t, y)
+xlim([0,20])
+title('Controller v1 - Output')
+hold on
+plot(t,ones(size(t))*0.045102)
+ylabel('y [g/l]')
+xlabel('t [min]')
+legend('y','r')
 
+plot(t, u)
+xlim([0,20])
+title('Controller v1 - Control Input')
+ylabel('u [U/l]')
+xlabel('t [min]')
+legend('u')
 
 

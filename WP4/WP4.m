@@ -30,6 +30,22 @@ u = simout.u;
 y_stepinfo = stepinfo(y,t,y(end))
 u_stepinfo = stepinfo(u,t,u(end))
 
+plot(t, y)
+xlim([0,20])
+title('Controller v2 - Output')
+hold on
+plot(t,ones(size(t))*0.045102)
+ylabel('y [g/l]')
+xlabel('t [min]')
+legend('y','r')
+
+plot(t, u)
+xlim([0,20])
+title('Controller v2 - Control Input')
+ylabel('u [U/l]')
+xlabel('t [min]')
+legend('u')
+
 %Questo è buono ma manca la reiezione dei disturbi
 
 %% Progettare un controllore feedback linearization con "metodo analitico" e azione integrale
