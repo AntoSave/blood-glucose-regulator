@@ -37,7 +37,7 @@ The project is organized into work packages, each of them representing a differe
 ## Dynamical model
 The dynamics of the system is described by the followind ODEs:
 
-[INSERT_IMAGE_HERE]
+![Dynamical system equations](./img/model.png)
 
 Where the parameters have the following meanings:
 - $p_1 = 0.0151 min^{-1}$ is the rate of glucose removal from the blood indipendently of the level of insulin;
